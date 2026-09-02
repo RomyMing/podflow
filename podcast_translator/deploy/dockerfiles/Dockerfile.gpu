@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1.7
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+ARG APT_MIRROR_HOST=
+ARG PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+ARG PIP_TRUSTED_HOST=mirrors.aliyun.com
+ARG PIP_DEFAULT_TIMEOUT=600
+ARG PIP_RETRIES=15
+ARG PIP_TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+ARG PIP_TORCH_PACKAGES="torch==2.2.2+cpu torchaudio==2.2.2+cpu"
+
+RUN if [ -n "$APT_MIRROR_HOST" ]; then \
+      if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+        sed -i "s|http://deb.debian.org|http://${APT_MIRROR_HOST}|g; s|http://security.debian.org|http://${APT_MIRROR_HOST}|g" /etc/apt/sources.list.d/debian.sources; \
+      fi; \
+      if [ -f /etc/apt/sources.list ]; then \
+        sed -i "s|http://deb.debian.org|http://${APT_MIRROR_HOST}|g; s|http://security.debian.org|http://${APT_MIRROR_HOST}|g" /etc/apt/sources.list; \
+      fi; \
+    fi \
+    && apt-get update -o Acquire::Retries=3 \
+    && apt-get install -y --no-install-recommends -o Acquire::Retries=3 build-essential curl ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml README.md alembic.ini /app/
+COPY migrations /app/migrations
+COPY src /app/src
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip config set global.index-url "${PIP_INDEX_URL}" \
+    && if [ -n "${PIP_TRUSTED_HOST}" ]; then pip config set global.trusted-host "${PIP_TRUSTED_HOST}"; fi \
+    && pip config set global.default-timeout "${PIP_DEFAULT_TIMEOUT}" \
+    && pip install --retries "${PIP_RETRIES}" --timeout "${PIP_DEFAULT_TIMEOUT}" --upgrade pip \
+    && if [ -n "${PIP_TORCH_INDEX_URL}" ]; then pip install --retries "${PIP_RETRIES}" --timeout "${PIP_DEFAULT_TIMEOUT}" --prefer-binary --index-url "${PIP_TORCH_INDEX_URL}" ${PIP_TORCH_PACKAGES}; fi \
+    && pip install --retries "${PIP_RETRIES}" --timeout "${PIP_DEFAULT_TIMEOUT}" --prefer-binary -e ".[pipeline]"
+
+CMD ["celery", "-A", "src.workers.celery_app:celery_app", "worker", "--loglevel=info", "--concurrency=1"]

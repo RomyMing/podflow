@@ -1,0 +1,26 @@
+name: Product feedback
+description: Share focused feedback or suggest an improvement
+title: "[Feedback]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What problem would this change solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested outcome
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Content safety
+      options:
+        - label: This report contains no credentials, private audio, or personal data.
+          required: true

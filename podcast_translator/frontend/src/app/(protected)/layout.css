@@ -1,0 +1,336 @@
+/* ============================================================
+   PodFlow — 应用整体布局样式
+   对应 PROJECT_UI.md §0 全局导航结构
+   ============================================================ */
+
+/* ---- 应用根容器 ---- */
+
+.app-frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100dvh;
+}
+
+.app-shell {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #F8F9FA;
+}
+
+/* ---- 侧边栏 ---- */
+
+.app-sidebar {
+  width: 224px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #FFFFFF;
+  border-right: 1px solid #E5E7EB;
+}
+
+/* Logo 区域 */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 20px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A1A1A;
+  text-decoration: none;
+  border-bottom: 1px solid #F1F3F5;
+}
+
+.sidebar-logo-emoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* 导航菜单 */
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  background: #F1F3F5;
+  color: #1A1A1A;
+}
+
+.sidebar-nav-item--active {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+.sidebar-nav-item--active:hover {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.sidebar-nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* 底部额度区域 */
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.sidebar-quota-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.sidebar-quota-value {
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.sidebar-quota-track {
+  width: 100%;
+  height: 5px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sidebar-quota-fill {
+  height: 100%;
+  background: #2563EB;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.sidebar-quota-fill--warning {
+  background: #F59E0B;
+}
+
+.sidebar-upgrade-link {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2563EB;
+  text-decoration: none;
+  padding: 6px 0;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-upgrade-link:hover {
+  background: #EFF6FF;
+  color: #1D4ED8;
+}
+
+/* ---- 主内容区域 ---- */
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ---- 顶部导航栏 ---- */
+
+.app-topnav {
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+  gap: 8px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topnav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #6B7280;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topnav-btn:hover {
+  background: #F1F3F5;
+  color: #1A1A1A;
+}
+
+.topnav-divider {
+  width: 1px;
+  height: 20px;
+  background: #E5E7EB;
+  margin: 0 4px;
+}
+
+/* Avatar Dropdown */
+.avatar-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.avatar-trigger:hover {
+  background: #F1F3F5;
+}
+
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.avatar-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A1A1A;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 下拉菜单 */
+.avatar-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  z-index: 100;
+  animation: avatar-dropdown-in 0.15s ease-out;
+}
+
+@keyframes avatar-dropdown-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.avatar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A1A1A;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.avatar-dropdown-item:hover {
+  background: #F1F3F5;
+}
+
+.avatar-dropdown-item--danger {
+  color: #DC2626;
+}
+
+.avatar-dropdown-item--danger:hover {
+  background: #FEF2F2;
+}
+
+.avatar-dropdown-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.avatar-dropdown-separator {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 4px 0;
+}
+
+/* ---- 页面内容容器 ---- */
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px;
+}
+
+.app-content-inner {
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ---- 响应式 ---- */
+
+@media (max-width: 768px) {
+  .app-sidebar {
+    display: none;
+  }
+
+  .app-content {
+    padding: 24px 20px;
+  }
+}

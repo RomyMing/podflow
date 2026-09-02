@@ -1,0 +1,47 @@
+services:
+  backend:
+    environment:
+      PCT_PIPELINE_MODE: real
+      PCT_ENABLE_REAL_COST_FEATURES: "true"
+      PCT_TRANSLATION_PROVIDER: ${PCT_TRANSLATION_PROVIDER:-deepseek}
+    volumes:
+      - ./src:/app/src
+      - ./migrations:/app/migrations
+      - model_cache:/root/.cache
+
+  worker:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.gpu
+      args:
+        APT_MIRROR_HOST: ${APT_MIRROR_HOST:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://mirrors.aliyun.com/pypi/simple/}
+        PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST:-mirrors.aliyun.com}
+        PIP_DEFAULT_TIMEOUT: ${PIP_DEFAULT_TIMEOUT:-600}
+        PIP_RETRIES: ${PIP_RETRIES:-15}
+        PIP_TORCH_INDEX_URL: ${PIP_TORCH_INDEX_URL:-https://download.pytorch.org/whl/cpu}
+        PIP_TORCH_PACKAGES: ${PIP_TORCH_PACKAGES:-torch==2.2.2+cpu torchaudio==2.2.2+cpu}
+    image: podflow-worker:real-local
+    environment:
+      PCT_PIPELINE_MODE: real
+      PCT_ENABLE_REAL_COST_FEATURES: "true"
+      PCT_TRANSLATION_PROVIDER: ${PCT_TRANSLATION_PROVIDER:-deepseek}
+      # Serialize long-audio chunks by default so concurrent Demucs runs don't OOM a
+      # memory-constrained CPU box; raise on a bigger/GPU worker.
+      PCT_CHUNK_PIPELINE_MAX_IN_FLIGHT: ${PCT_CHUNK_PIPELINE_MAX_IN_FLIGHT:-1}
+      # Whisper model size. medium (~1.5GB) + demucs + pyannote can OOM a small Docker VM;
+      # small (~0.5GB) keeps peak memory down on CPU-only local runs.
+      PCT_ASR_MODEL: ${PCT_ASR_MODEL:-medium}
+    volumes:
+      - ./src:/app/src
+      - ./migrations:/app/migrations
+    command:
+      - celery
+      - -A
+      - src.workers.celery_app:celery_app
+      - worker
+      - --loglevel=info
+      - --concurrency=1
+
+volumes:
+  model_cache:

@@ -1,0 +1,20 @@
+# Local-only commercial, pricing, strategy, and decision documents.
+private_business_docs/
+
+# Public-release staging worktree.
+public_release/
+
+# OS and editor state.
+.DS_Store
+**/.DS_Store
+.vscode/
+
+# Generated language and package-manager state.
+**/__pycache__/
+*.py[cod]
+.pnpm-store/
+
+# Local operator scripts and generated planning metadata.
+**/scratch/
+brain/**/*.metadata.json
+brain/**/*.resolved*

@@ -1,0 +1,30 @@
+# GPU overlay for the real pipeline. Layer on top of the base + real compose files:
+#
+#   docker compose --env-file .env.real \
+#     -f docker-compose.yml -f docker-compose.real.yml -f docker-compose.gpu.yml \
+#     up -d --build
+#
+# Prerequisites on the host:
+#   - NVIDIA driver installed
+#   - nvidia-container-toolkit installed and Docker configured for it
+#   - verify:  docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+#
+# Also set CUDA torch wheels in .env.real (they default to CPU):
+#   PIP_TORCH_INDEX_URL=https://download.pytorch.org/whl/cu121
+#   PIP_TORCH_PACKAGES=torch==2.2.2 torchaudio==2.2.2
+#
+# The front-half stages (demucs / pyannote / faster-whisper) auto-detect CUDA, so no
+# code or PCT_*_DEVICE changes are required once torch.cuda.is_available() is True.
+services:
+  worker:
+    environment:
+      # Make all host GPUs visible inside the container.
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

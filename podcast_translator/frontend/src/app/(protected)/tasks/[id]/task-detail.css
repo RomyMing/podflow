@@ -1,0 +1,740 @@
+/* ============================================================
+   PodFlow — Task Detail / Progress Page Styles
+   对应 PROJECT_UI.md §2 任务详情/进度页
+   ============================================================ */
+
+/* ---- Page Header (Back + Title) ---- */
+
+.task-detail-page {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.task-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.task-detail__back:hover {
+  color: var(--color-accent);
+}
+
+.task-detail__back-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- Task Header ---- */
+
+.task-header {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+.task-header__icon-wrapper {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+}
+
+.task-header__icon {
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-tertiary);
+}
+
+.task-header__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.task-header__title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+.task-header__subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.task-header__meta {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  margin-top: 8px;
+}
+
+.task-detail__status-note {
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border: 1px solid rgba(59, 130, 246, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.task-detail__status-note-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.task-detail__status-note-description {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* Status badge in header */
+.task-header__status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.task-header__status-badge--completed {
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--color-success);
+}
+
+.task-header__status-badge--failed {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--color-error);
+}
+
+.task-header__status-badge--paused {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+}
+
+.task-header__status-badge--processing {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+}
+
+.task-header__status-badge--pending {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+}
+
+/* ---- Pipeline Progress Panel ---- */
+
+.pipeline-progress {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.pipeline-progress__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Individual Step */
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pipeline-step__icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pipeline-step__icon--completed {
+  background: var(--color-success);
+  color: #FFFFFF;
+}
+
+.pipeline-step__icon--active {
+  background: var(--color-warning);
+  color: #FFFFFF;
+}
+
+.pipeline-step__icon--failed {
+  background: transparent;
+  color: var(--color-error);
+}
+
+.pipeline-step__icon--paused {
+  background: transparent;
+  color: var(--color-warning);
+}
+
+.pipeline-step__icon--pending {
+  background: transparent;
+  color: var(--color-border);
+}
+
+.pipeline-step__icon-svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pipeline-step__icon-svg--spin {
+  animation: spin 1s linear infinite;
+}
+
+.pipeline-step__label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.pipeline-step--pending .pipeline-step__label {
+  color: var(--color-text-tertiary);
+}
+
+.pipeline-step__status {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.pipeline-step__status--completed {
+  color: var(--color-success);
+}
+
+.pipeline-step__status--active {
+  color: var(--color-warning);
+  font-weight: 500;
+}
+
+.pipeline-step__status--failed {
+  color: var(--color-error);
+}
+
+.pipeline-step__status--paused {
+  color: var(--color-warning);
+  font-weight: 500;
+}
+
+.pipeline-step__status--pending {
+  color: var(--color-text-tertiary);
+}
+
+/* Progress Bar */
+.pipeline-progress__bar-container {
+  margin-top: 24px;
+}
+
+.pipeline-progress__bar-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-bg-tertiary);
+  overflow: hidden;
+}
+
+.pipeline-progress__bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--color-accent);
+  transition: width 0.5s ease;
+}
+
+.pipeline-progress__bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.pipeline-progress__bar-percent {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.pipeline-progress__bar-eta {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+
+/* ---- Task Error Card ---- */
+
+.task-error-card {
+  background: #FEF2F2;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.task-error-card__icon-wrapper {
+  margin-bottom: 16px;
+}
+
+.task-error-card__icon {
+  width: 36px;
+  height: 36px;
+  color: var(--color-error);
+  margin: 0 auto;
+}
+
+.task-error-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-error);
+  margin-bottom: 8px;
+}
+
+.task-error-card__description {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.task-error-card__retry-btn {
+  margin: 0 auto;
+}
+
+.task-error-card__hint {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-top: 12px;
+}
+
+/* ---- Task Paused / Diagnostics ---- */
+
+.task-detail__paused-card,
+.task-detail__stage-runs,
+.task-detail__speakers {
+  margin-top: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-primary);
+  padding: 20px;
+}
+
+.task-detail__paused-card {
+  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.task-detail__paused-title,
+.task-detail__section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.task-detail__paused-desc {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.task-detail__paused-code,
+.task-detail__paused-error {
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.task-detail__paused-code {
+  color: var(--color-text-tertiary);
+}
+
+.task-detail__paused-error {
+  color: var(--color-error);
+}
+
+.task-detail__action-btn {
+  min-height: 44px;
+  padding: 12px 24px !important;
+  font-size: 14px;
+}
+
+.task-detail__resume-btn {
+  gap: 8px;
+}
+
+.task-detail__action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.task-detail__action-row .task-detail__action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-detail__hint {
+  width: 100%;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.task-detail__stage-run-list,
+.task-detail__speakers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-detail__stage-run,
+.task-detail__speaker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px 104px 118px;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 0;
+}
+
+.task-detail__speaker {
+  grid-template-columns: 96px 72px minmax(130px, 1fr) 120px;
+}
+
+.task-detail__stage-run span,
+.task-detail__speaker span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.task-detail__stage-run:last-child,
+.task-detail__speaker:last-child {
+  border-bottom: none;
+}
+
+/* ---- Task Complete Card ---- */
+
+.task-complete-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.task-complete-card__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.task-complete-card__download-btn {
+  min-width: 172px;
+  min-height: 46px;
+  padding: 13px 26px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.2);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+}
+
+.task-complete-card__download-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.26);
+  filter: saturate(1.04);
+}
+
+.task-complete-card__download-btn:active {
+  transform: translateY(0);
+}
+
+.task-complete-card__transcript-btn {
+  min-width: 172px;
+  min-height: 46px;
+  padding: 13px 26px !important;
+  border-radius: 999px !important;
+  background: #f3f4f6 !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.08);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+}
+
+.task-complete-card__transcript-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(17, 24, 39, 0.12);
+  background: #e9ebee !important;
+}
+
+.task-complete-card__transcript-btn:active {
+  transform: translateY(0);
+}
+
+/* ---- Audio Player ---- */
+
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 64px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 0 16px;
+}
+
+.audio-player__play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--color-accent);
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.audio-player__play-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.audio-player__play-btn:active {
+  transform: scale(0.95);
+}
+
+.audio-player__play-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Seek Track */
+.audio-player__track {
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.audio-player__track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-bg-tertiary);
+}
+
+.audio-player__track-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+.audio-player__track-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.audio-player__track:hover .audio-player__track-handle {
+  opacity: 1;
+}
+
+/* Time */
+.audio-player__time {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  min-width: 85px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Controls */
+.audio-player__control-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.audio-player__control-btn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.audio-player__control-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.audio-player__speed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  min-width: 36px;
+}
+
+.audio-player__speed-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+/* ---- Loading Skeleton ---- */
+
+.task-detail__skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.task-detail__skeleton-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+}
+
+.task-detail__skeleton-title {
+  width: 240px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.task-detail__skeleton-subtitle {
+  width: 180px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.task-detail__skeleton-panel {
+  width: 100%;
+  height: 280px;
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+}
+
+/* ---- Error Retry State ---- */
+
+.task-detail__error {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.task-detail__error-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-tertiary);
+  margin: 0 auto 12px;
+}
+
+.task-detail__error-text {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 640px) {
+  .task-header__title {
+    font-size: 18px;
+  }
+
+  .audio-player {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .audio-player__time {
+    min-width: auto;
+    order: 4;
+  }
+
+  .audio-player__track {
+    order: 5;
+    width: 100%;
+    flex: none;
+  }
+
+  .task-complete-card__actions {
+    flex-direction: column;
+  }
+
+  .task-complete-card__actions button {
+    width: 100%;
+  }
+
+  .pipeline-progress {
+    padding: 16px;
+  }
+}

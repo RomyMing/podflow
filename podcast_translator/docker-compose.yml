@@ -1,0 +1,239 @@
+x-podflow-env: &podflow-env
+  PCT_APP_ENV: ${PCT_APP_ENV:-dev}
+  PCT_APP_MODE: ${PCT_APP_MODE:-prod}
+  PCT_AUTH_MODE: ${PCT_AUTH_MODE:-sms}
+  PCT_ENABLE_SMS_LOGIN: ${PCT_ENABLE_SMS_LOGIN:-true}
+  PCT_SHOW_DEMO_BANNER: ${PCT_SHOW_DEMO_BANNER:-false}
+  PCT_ENABLE_SAMPLE_TASKS: ${PCT_ENABLE_SAMPLE_TASKS:-false}
+  PCT_ALLOW_USER_UPLOAD: ${PCT_ALLOW_USER_UPLOAD:-true}
+  PCT_ENABLE_REAL_COST_FEATURES: ${PCT_ENABLE_REAL_COST_FEATURES:-false}
+  PCT_DEMO_USER_PHONE: ${PCT_DEMO_USER_PHONE:-13800138000}
+  PCT_DEMO_USER_NICKNAME: ${PCT_DEMO_USER_NICKNAME:-PodFlow Demo}
+  PCT_DEFAULT_MONTHLY_QUOTA: ${PCT_DEFAULT_MONTHLY_QUOTA:-5}
+  PCT_SECRET_KEY: ${PCT_SECRET_KEY:-dev-secret-key}
+  PCT_CREDENTIALS_ENCRYPTION_KEY: ${PCT_CREDENTIALS_ENCRYPTION_KEY:-}
+  PCT_DATABASE_URL: postgresql+asyncpg://postgres:postgres_password@postgres:5432/podcast_translator
+  PCT_REDIS_URL: redis://redis:6379/0
+  PCT_S3_ENDPOINT: http://minio:9000
+  PCT_S3_PUBLIC_ENDPOINT: ${PCT_S3_PUBLIC_ENDPOINT:-http://127.0.0.1:9000}
+  PCT_S3_BUCKET: ${PCT_S3_BUCKET:-podcast-translator-audio}
+  PCT_S3_ACCESS_KEY: ${PCT_S3_ACCESS_KEY:-admin}
+  PCT_S3_SECRET_KEY: ${PCT_S3_SECRET_KEY:-minio_password}
+  PCT_HF_TOKEN: ${PCT_HF_TOKEN:-}
+  PCT_DASHSCOPE_API_KEY: ${PCT_DASHSCOPE_API_KEY:-}
+  PCT_ASR_PROVIDER: ${PCT_ASR_PROVIDER:-whisper}
+  PCT_TTS_PROVIDER: ${PCT_TTS_PROVIDER:-cosyvoice}
+  PCT_VOICE_CLONE_PROVIDER: ${PCT_VOICE_CLONE_PROVIDER:-elevenlabs}
+  PCT_ELEVENLABS_API_KEY: ${PCT_ELEVENLABS_API_KEY:-}
+  PCT_ELEVENLABS_BASE_URL: ${PCT_ELEVENLABS_BASE_URL:-https://api.elevenlabs.io}
+  PCT_ELEVENLABS_TTS_MODEL: ${PCT_ELEVENLABS_TTS_MODEL:-eleven_multilingual_v2}
+  PCT_ELEVENLABS_OUTPUT_FORMAT: ${PCT_ELEVENLABS_OUTPUT_FORMAT:-mp3_44100_128}
+  PCT_ELEVENLABS_TIMEOUT_SECONDS: ${PCT_ELEVENLABS_TIMEOUT_SECONDS:-60}
+  PCT_ELEVENLABS_MAX_RETRIES: ${PCT_ELEVENLABS_MAX_RETRIES:-3}
+  PCT_ELEVENLABS_RETRY_BACKOFF_SECONDS: ${PCT_ELEVENLABS_RETRY_BACKOFF_SECONDS:-2.0}
+  PCT_ELEVENLABS_REMOVE_BACKGROUND_NOISE: ${PCT_ELEVENLABS_REMOVE_BACKGROUND_NOISE:-true}
+  PCT_VOICE_CLONE_RETENTION_DAYS: ${PCT_VOICE_CLONE_RETENTION_DAYS:-7}
+  PCT_REQUIRE_VOICE_CLONE_CONSENT: ${PCT_REQUIRE_VOICE_CLONE_CONSENT:-false}
+  PCT_TRANSLATION_PROVIDER: ${PCT_TRANSLATION_PROVIDER:-openai}
+  PCT_OPENAI_API_KEY: ${PCT_OPENAI_API_KEY:-mock-openai-key}
+  PCT_OPENAI_BASE_URL: ${PCT_OPENAI_BASE_URL:-}
+  PCT_DEEPSEEK_API_KEY: ${PCT_DEEPSEEK_API_KEY:-}
+  PCT_DEEPSEEK_BASE_URL: ${PCT_DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+  PCT_SMS_PROVIDER: ${PCT_SMS_PROVIDER:-mock}
+  PCT_PIPELINE_MODE: ${PCT_PIPELINE_MODE:-mock}
+  PCT_MOCK_PIPELINE_STAGE_DELAY_SECONDS: ${PCT_MOCK_PIPELINE_STAGE_DELAY_SECONDS:-0.5}
+  PCT_PIPELINE_TASK_TIME_LIMIT_SECONDS: ${PCT_PIPELINE_TASK_TIME_LIMIT_SECONDS:-172800}
+  PCT_PIPELINE_TASK_SOFT_TIME_LIMIT_SECONDS: ${PCT_PIPELINE_TASK_SOFT_TIME_LIMIT_SECONDS:-169200}
+  PCT_ENABLE_STALL_RECONCILER: ${PCT_ENABLE_STALL_RECONCILER:-false}
+  PCT_WORKER_HEARTBEAT_INTERVAL_SECONDS: ${PCT_WORKER_HEARTBEAT_INTERVAL_SECONDS:-30}
+  PCT_WORKER_LOCK_TTL_SECONDS: ${PCT_WORKER_LOCK_TTL_SECONDS:-300}
+  PCT_TASK_STALL_TIMEOUT_SECONDS: ${PCT_TASK_STALL_TIMEOUT_SECONDS:-900}
+  PCT_TASK_STALL_CONFIRMATION_SECONDS: ${PCT_TASK_STALL_CONFIRMATION_SECONDS:-300}
+  PCT_TASK_STALL_SCAN_INTERVAL_SECONDS: ${PCT_TASK_STALL_SCAN_INTERVAL_SECONDS:-60}
+  PCT_TASK_STALL_SCAN_BATCH_SIZE: ${PCT_TASK_STALL_SCAN_BATCH_SIZE:-100}
+  PCT_ENABLE_LONG_AUDIO_PIPELINE: ${PCT_ENABLE_LONG_AUDIO_PIPELINE:-true}
+  PCT_LONG_AUDIO_THRESHOLD_SECONDS: ${PCT_LONG_AUDIO_THRESHOLD_SECONDS:-1800}
+  PCT_MAX_AUDIO_DURATION_SECONDS: ${PCT_MAX_AUDIO_DURATION_SECONDS:-18000}
+  PCT_MAX_UPLOAD_BYTES: ${PCT_MAX_UPLOAD_BYTES:-5368709120}
+  PCT_AUDIO_CHUNK_SECONDS: ${PCT_AUDIO_CHUNK_SECONDS:-600}
+  PCT_AUDIO_CHUNK_OVERLAP_SECONDS: ${PCT_AUDIO_CHUNK_OVERLAP_SECONDS:-5}
+  PCT_TRANSLATION_BATCH_SIZE: ${PCT_TRANSLATION_BATCH_SIZE:-20}
+  PCT_TTS_BATCH_SIZE: ${PCT_TTS_BATCH_SIZE:-20}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pct_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: podcast_translator
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres -d podcast_translator' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: pct_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: pct_minio
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: minio_password
+    command: server /data --console-address ':9001'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.api
+    container_name: pct_backend
+    environment:
+      <<: *podflow-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - '8000:8000'
+    healthcheck:
+      test: [ 'CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  worker:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.worker
+    container_name: pct_worker
+    environment:
+      <<: *podflow-env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  beat:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.worker
+    container_name: pct_beat
+    environment:
+      <<: *podflow-env
+    command: celery -A src.workers.celery_app:celery_app beat --loglevel=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.frontend
+      args:
+        PCT_FRONTEND_PROXY_TARGET: ${PCT_FRONTEND_PROXY_TARGET:-http://backend:8000}
+        NEXT_PUBLIC_PCT_API_ORIGIN: ${NEXT_PUBLIC_PCT_API_ORIGIN:-}
+        NEXT_PUBLIC_PCT_UPLOAD_API_ORIGIN: ${NEXT_PUBLIC_PCT_UPLOAD_API_ORIGIN:-}
+        NEXT_PUBLIC_PCT_APP_MODE: ${NEXT_PUBLIC_PCT_APP_MODE:-prod}
+        NEXT_PUBLIC_PCT_AUTH_MODE: ${NEXT_PUBLIC_PCT_AUTH_MODE:-sms}
+        NEXT_PUBLIC_PCT_SHOW_DEMO_BANNER: ${NEXT_PUBLIC_PCT_SHOW_DEMO_BANNER:-false}
+        NEXT_PUBLIC_PCT_ENABLE_SAMPLE_TASKS: ${NEXT_PUBLIC_PCT_ENABLE_SAMPLE_TASKS:-false}
+        NEXT_PUBLIC_PCT_ALLOW_USER_UPLOAD: ${NEXT_PUBLIC_PCT_ALLOW_USER_UPLOAD:-true}
+    container_name: pct_frontend
+    environment:
+      PCT_FRONTEND_PROXY_TARGET: ${PCT_FRONTEND_PROXY_TARGET:-http://backend:8000}
+      NEXT_PUBLIC_PCT_API_ORIGIN: ${NEXT_PUBLIC_PCT_API_ORIGIN:-}
+      NEXT_PUBLIC_PCT_UPLOAD_API_ORIGIN: ${NEXT_PUBLIC_PCT_UPLOAD_API_ORIGIN:-}
+      NEXT_PUBLIC_PCT_APP_MODE: ${NEXT_PUBLIC_PCT_APP_MODE:-prod}
+      NEXT_PUBLIC_PCT_AUTH_MODE: ${NEXT_PUBLIC_PCT_AUTH_MODE:-sms}
+      NEXT_PUBLIC_PCT_SHOW_DEMO_BANNER: ${NEXT_PUBLIC_PCT_SHOW_DEMO_BANNER:-false}
+      NEXT_PUBLIC_PCT_ENABLE_SAMPLE_TASKS: ${NEXT_PUBLIC_PCT_ENABLE_SAMPLE_TASKS:-false}
+      NEXT_PUBLIC_PCT_ALLOW_USER_UPLOAD: ${NEXT_PUBLIC_PCT_ALLOW_USER_UPLOAD:-true}
+      NEXT_TELEMETRY_DISABLED: '1'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: [ 'CMD', 'node', '-e', "fetch('http://127.0.0.1:3000').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))" ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  nginx:
+    image: nginx:alpine
+    container_name: pct_nginx
+    ports:
+      - '8080:80'
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    healthcheck:
+      test: [ 'CMD', 'wget', '-qO-', 'http://127.0.0.1/health' ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  postgres_test:
+    image: postgres:16-alpine
+    container_name: pct_postgres_test
+    profiles: [ 'test' ]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: podcast_translator_test
+    ports:
+      - '5433:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres -d podcast_translator_test' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
