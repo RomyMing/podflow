@@ -1,0 +1,63 @@
+services:
+  backend:
+    image: ${PODFLOW_IMAGE_NAMESPACE}/podflow-api:${PODFLOW_IMAGE_TAG:-main-latest}
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+
+  worker:
+    image: ${PODFLOW_IMAGE_NAMESPACE}/podflow-worker:${PODFLOW_IMAGE_TAG:-main-latest}
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  beat:
+    image: ${PODFLOW_IMAGE_NAMESPACE}/podflow-worker:${PODFLOW_IMAGE_TAG:-main-latest}
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    command: celery -A src.workers.celery_app:celery_app beat --loglevel=info
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  frontend:
+    image: ${PODFLOW_IMAGE_NAMESPACE}/podflow-frontend:${PODFLOW_IMAGE_TAG:-main-latest}
+    restart: unless-stopped
+    environment:
+      PCT_FRONTEND_PROXY_TARGET: ${PCT_FRONTEND_PROXY_TARGET:-http://backend:8000}
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${PODFLOW_HTTP_PORT:-80}:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 12

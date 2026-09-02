@@ -1,0 +1,50 @@
+# Environments
+.env
+.env.demo
+.env.local
+.env.real
+.venv
+.python-build/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+celerybeat-schedule
+celerybeat.pid
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (for frontend if ever run in root, or to be safe)
+node_modules/
+dist/
+build/
+.next/
+
+# Logs
+logs/
+*.log
+
+# Local operator scratch files
+scratch/
+.tmp/
+
+# OS generated files
+.DS_Store
+Thumbs.db

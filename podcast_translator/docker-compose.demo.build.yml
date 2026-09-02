@@ -1,0 +1,41 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.api
+      args:
+        APT_MIRROR_HOST: mirrors.aliyun.com
+        PIP_INDEX_URL: https://mirrors.aliyun.com/pypi/simple/
+        PIP_TRUSTED_HOST: mirrors.aliyun.com
+        PIP_DEFAULT_TIMEOUT: "120"
+    image: podflow-api:demo-local
+
+  worker:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.worker
+      args:
+        APT_MIRROR_HOST: mirrors.aliyun.com
+        PIP_INDEX_URL: https://mirrors.aliyun.com/pypi/simple/
+        PIP_TRUSTED_HOST: mirrors.aliyun.com
+        PIP_DEFAULT_TIMEOUT: "120"
+    image: podflow-worker:demo-local
+
+  beat:
+    image: podflow-worker:demo-local
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/dockerfiles/Dockerfile.frontend
+      args:
+        NPM_REGISTRY: https://registry.npmmirror.com
+        PCT_FRONTEND_PROXY_TARGET: http://backend:8000
+        NEXT_PUBLIC_PCT_API_ORIGIN: /api/v1
+        NEXT_PUBLIC_PCT_UPLOAD_API_ORIGIN: /api/v1
+        NEXT_PUBLIC_PCT_APP_MODE: demo
+        NEXT_PUBLIC_PCT_AUTH_MODE: demo
+        NEXT_PUBLIC_PCT_SHOW_DEMO_BANNER: "true"
+        NEXT_PUBLIC_PCT_ENABLE_SAMPLE_TASKS: "true"
+        NEXT_PUBLIC_PCT_ALLOW_USER_UPLOAD: "true"
+    image: podflow-frontend:demo-local

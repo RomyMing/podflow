@@ -1,0 +1,15 @@
+.git
+.github
+.pytest_cache
+.venv
+.vscode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+frontend/.next
+frontend/node_modules
+scratch
+pytest_error.log

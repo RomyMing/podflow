@@ -1,0 +1,59 @@
+/* ============================================================
+   404 Not Found Page — not-found.css
+   对应 PROJECT_UI.md §7
+   ============================================================ */
+
+.not-found-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 24px;
+  text-align: center;
+  background: var(--color-bg-primary);
+}
+
+.not-found__number {
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-bg-tertiary);
+  margin-bottom: 8px;
+  user-select: none;
+  letter-spacing: -4px;
+}
+
+.not-found__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.not-found__desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: 36px;
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+.not-found__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.not-found__cta:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
