@@ -28,7 +28,7 @@ dependencies = [
 
 [project.optional-dependencies]
 pipeline = [
-    "numpy<2",
+    "numpy<3",
     "demucs>=4.0.0",
     "pyannote.audio>=3.1.0,<3.2.0",
     "faster-whisper>=1.0.0",
